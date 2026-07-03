@@ -10039,9 +10039,8 @@ Return ONLY a JSON array, no prose: [{"qNumber":"<as given>","found":true|false,
 
       <UpdateNote topic={topic} years={years} />
       {editing && <EntryModal topic={topic} years={years} entry={editing} onClose={() => setEditing(null)} onSave={(e) => { onSave(e); setEditing(null); }} />}
-      </>
-    }
     </div>
+    </>
   );
 }
 
