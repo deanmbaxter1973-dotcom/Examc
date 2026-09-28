@@ -1,60 +1,29 @@
-// Exam Chronicle Service Worker v2.0 — offline-first
-const CACHE = "exam-chronicle-v2.0";
-const SHELL = ["/", "/index.html", "/manifest.json",
-  "/icons/icon-180.png", "/icons/icon-192.png", "/icons/icon-512.png",
-  "/logo.png", "/favicon.ico"
-];
-
-// Install — cache shell immediately
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(SHELL))
-      .then(() => self.skipWaiting())
-  );
+// Exam Chronicle Service Worker v34
+const CACHE="exam-chronicle-v34";
+const SHELL=["./","./index.html","./manifest.json","./icons/icon-180.png","./icons/icon-192.png","./icons/icon-512.png","./logo.png","./favicon.ico"];
+self.addEventListener("install",event=>{
+  self.skipWaiting();
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).catch(()=>{}));
 });
-
-// Activate — clear old caches
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+self.addEventListener("activate",event=>{
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
 });
-
-// Fetch — cache-first for assets, network-first for nav, skip AI APIs
-self.addEventListener("fetch", e => {
-  const url = new URL(e.request.url);
-
-  // Never intercept AI API calls
-  if (url.hostname.match(/anthropic\.com|openai\.com|azure\.com|googleapis\.com\/\/fonts(?!.*css)/)) return;
-  if (url.hostname === "fonts.gstatic.com") return; // Font files — browser caches
-
-  // SPA navigation — network first, fall back to shell
-  if (e.request.mode === "navigate") {
-    e.respondWith(
-      fetch(e.request)
-        .catch(() => caches.match("/index.html"))
-    );
+self.addEventListener("fetch",event=>{
+  const req=event.request;
+  if(req.method!=="GET") return;
+  const url=new URL(req.url);
+  if(/api\.anthropic|openai\.com|azure\.com/.test(url.hostname)) return;
+  if(req.mode==="navigate"){
+    event.respondWith(fetch(req).then(res=>{
+      const copy=res.clone(); caches.open(CACHE).then(cache=>cache.put("./index.html",copy)); return res;
+    }).catch(()=>caches.match("./index.html").then(r=>r||caches.match("./"))));
     return;
   }
-
-  // Static assets — cache first
-  if (url.pathname.match(/\/assets\/|\/icons\/|\/logo\.png|\.woff2?$|\.css$|\.js$/) ||
-      url.pathname === "/manifest.json" || url.pathname === "/favicon.ico") {
-    e.respondWith(
-      caches.match(e.request)
-        .then(hit => hit || fetch(e.request).then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-          return res;
-        }))
-    );
+  if(url.origin===self.location.origin||url.pathname.match(/\/assets\/|\/icons\/|\/logo\.png|\.woff2?$|\.css$|\.js$/)){
+    event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{
+      if(res.ok||res.type==="opaque") caches.open(CACHE).then(cache=>cache.put(req,res.clone()));
+      return res;
+    }).catch(()=>new Response("Offline",{status:503,statusText:"Offline"}))));
   }
 });
-
-// Background sync for calendar data
-self.addEventListener("message", e => {
-  if (e.data === "skipWaiting") self.skipWaiting();
-});
+self.addEventListener("message",event=>{if(event.data==="skipWaiting") self.skipWaiting();});
