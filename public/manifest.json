@@ -1,16 +1,16 @@
 {
   "name": "Exam Chronicle",
   "short_name": "ExamChron",
-  "description": "Prepare. Practice. Succeed. \u2014 GCSE & A Level past-paper tracker.",
-  "start_url": "/",
-  "scope": "/",
+  "description": "Personalised GCSE and A-Level revision with study analytics, calendar planning and portable course backups",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "display_override": [
     "standalone",
     "minimal-ui"
   ],
   "orientation": "portrait-primary",
-  "background_color": "#0D1B2E",
+  "background_color": "#060E1A",
   "theme_color": "#0D1B2E",
   "categories": [
     "education",
@@ -19,62 +19,37 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon-16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-180.png",
+      "src": "./icons/icon-180.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-192.png",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Exam Chronicle"
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Test Me",
-      "url": "/?panel=flashcard",
+      "url": "./?panel=flashcard",
       "description": "Open flashcard test mode"
     },
     {
       "name": "Study Plan",
-      "url": "/?panel=plan",
+      "url": "./?panel=plan",
       "description": "View your study plan"
     },
     {
       "name": "Search",
-      "url": "/?panel=search",
+      "url": "./?panel=search",
       "description": "Search questions"
     }
   ]
