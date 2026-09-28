@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 *,*::before,*::after{box-sizing:border-box}
-html,body,#root{min-height:100vh;margin:0;padding:0}
-body{-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{height:100%;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;--ec-vh:100vh}
+@supports(height:100dvh){html{--ec-vh:100dvh}}
+html,body,#root{min-height:var(--ec-vh);margin:0;padding:0}
+body{-webkit-font-smoothing:antialiased;overflow-x:hidden;overscroll-behavior:none}
+input,select,textarea{font-size:16px!important}
+button,a,input,select,textarea{touch-action:manipulation}
+button,a{min-height:44px}
 .scrollbar-hide::-webkit-scrollbar{display:none}
-.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}
+.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none;overscroll-behavior-x:contain}
