@@ -15,7 +15,9 @@ self.addEventListener("fetch",event=>{
   if(/api\.anthropic|openai\.com|azure\.com/.test(url.hostname)) return;
   if(req.mode==="navigate"){
     event.respondWith(fetch(req).then(res=>{
-      const copy=res.clone(); caches.open(CACHE).then(cache=>cache.put("./index.html",copy)); return res;
+      const copy=res.clone();
+      caches.open(CACHE).then(cache=>cache.put("./index.html",copy));
+      return res;
     }).catch(()=>caches.match("./index.html").then(r=>r||caches.match("./"))));
     return;
   }
